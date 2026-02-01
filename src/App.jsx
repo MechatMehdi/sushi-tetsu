@@ -3,14 +3,14 @@ import { motion, AnimatePresence, useScroll, useTransform, useSpring, useInView 
 import './index.css';
 
 const menuData = [
-    { id: 1, name: "Otoro Nigiri", price: "£15", desc: "Fatty tuna belly, aged 3 days", img: "src/assets/otoro_nigiri.png" },
-    { id: 2, name: "Hamachi", price: "£12", desc: "Yellowtail with citrus zest", img: "src/assets/hamachi.png" },
-    { id: 3, name: "Uni Gunkan", price: "£18", desc: "Fresh Hokkaido sea urchin", img: "src/assets/uni_gunkan.png" },
-    { id: 4, name: "Anago", price: "£10", desc: "Saltwater eel with sweet soy", img: "src/assets/anago.png" },
-    { id: 5, name: "Akami", price: "£9", desc: "Lean bluefin tuna", img: "src/assets/akami.png" },
-    { id: 6, name: "Botan Ebi", price: "£14", desc: "Sweet spot prawn", img: "src/assets/botan_ebi.png" },
-    { id: 7, name: "Hotate", price: "£11", desc: "Hokkaido scallops", img: "src/assets/hotate.png" },
-    { id: 8, name: "Ikura", price: "£12", desc: "Marinated salmon roe", img: "src/assets/ikura.png" },
+    { id: 1, name: "Otoro Nigiri", price: "£15", desc: "Fatty tuna belly, aged 3 days", img: "./src/assets/otoro_nigiri.png" },
+    { id: 2, name: "Hamachi", price: "£12", desc: "Yellowtail with citrus zest", img: "./src/assets/hamachi.png" },
+    { id: 3, name: "Uni Gunkan", price: "£18", desc: "Fresh Hokkaido sea urchin", img: "./src/assets/uni_gunkan.png" },
+    { id: 4, name: "Anago", price: "£10", desc: "Saltwater eel with sweet soy", img: "./src/assets/anago.png" },
+    { id: 5, name: "Akami", price: "£9", desc: "Lean bluefin tuna", img: "./src/assets/akami.png" },
+    { id: 6, name: "Botan Ebi", price: "£14", desc: "Sweet spot prawn", img: "./src/assets/botan_ebi.png" },
+    { id: 7, name: "Hotate", price: "£11", desc: "Hokkaido scallops", img: "./src/assets/hotate.png" },
+    { id: 8, name: "Ikura", price: "£12", desc: "Marinated salmon roe", img: "./src/assets/ikura.png" },
 ];
 
 const omakaseSets = [
