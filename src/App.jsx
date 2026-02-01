@@ -702,5 +702,5 @@ function App() {
         </div>
     );
 }
-
+//life sucks lmao
 export default App;
