@@ -2,6 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, useSpring, useInView } from 'framer-motion';
 import './index.css';
 
+// Import your images if they're in src/assets
+// Or you can use relative paths if they're in public folder
+// For now, I'll use the path structure you provided
+
 const menuData = [
     { id: 1, name: "Otoro Nigiri", price: "£15", desc: "Fatty tuna belly, aged 3 days", img: "src/assets/otoro_nigiri.png" },
     { id: 2, name: "Hamachi", price: "£12", desc: "Yellowtail with citrus zest", img: "src/assets/hamachi.png" },
@@ -24,15 +28,7 @@ function App() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [hoveredItem, setHoveredItem] = useState(null);
     const [activeCategory, setActiveCategory] = useState("all");
-    const [reservationData, setReservationData] = useState({
-        name: "",
-        email: "",
-        phone: "",
-        guests: 2,
-        date: "",
-        time: "19:00",
-        message: ""
-    });
+    const [reservationData, setReservationData] = useState({ guests: 2, date: "" });
     const containerRef = useRef(null);
     const heroRef = useRef(null);
     const { scrollYProgress } = useScroll();
@@ -46,7 +42,7 @@ function App() {
 
         const interval = setInterval(() => {
             setActiveIndex((prev) => (prev + 1) % menuData.length);
-        }, 8000);
+        }, 8000); // Changed from 4000 to 8000 for slower animation
 
         return () => {
             window.removeEventListener('scroll', handleScroll);
@@ -61,32 +57,14 @@ function App() {
         ? menuData
         : menuData.filter(item => item.category === activeCategory);
 
+    const categories = ["all", ...new Set(menuData.map(item => item.category))];
+
     const scrollToSection = (id) => {
         const element = document.getElementById(id);
         if (element) {
             element.scrollIntoView({ behavior: 'smooth' });
         }
     };
-
-    const handleReservationSubmit = (e) => {
-        e.preventDefault();
-        // Here you would typically send the reservation data to your backend
-        console.log('Reservation submitted:', reservationData);
-        alert('Reservation request sent! We will contact you shortly to confirm.');
-
-        // Reset form
-        setReservationData({
-            name: "",
-            email: "",
-            phone: "",
-            guests: 2,
-            date: "",
-            time: "19:00",
-            message: ""
-        });
-    };
-
-    const timeSlots = ["19:00", "19:30", "20:00", "20:30", "21:00", "21:30"];
 
     return (
         <div className="app-luxury" ref={containerRef}>
@@ -154,7 +132,7 @@ function App() {
                             whileTap={{ scale: 0.95 }}
                             onClick={() => scrollToSection('book')}
                         >
-                            <span className="btn-text">Book a Table</span>
+                            <span className="btn-text">Book</span>
                             <motion.span
                                 className="btn-arrow"
                                 animate={{ x: [0, 3, 0] }}
@@ -485,7 +463,7 @@ function App() {
                     >
                         <h2 className="section-title">
                             <span className="title-number">04</span>
-                            <span className="title-text">Make a Reservation</span>
+                            <span className="title-text">Reserve the Counter</span>
                         </h2>
                         <div className="title-line"></div>
                     </motion.div>
@@ -497,126 +475,47 @@ function App() {
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
                         >
-                            <form onSubmit={handleReservationSubmit}>
-                                <div className="form-grid">
-                                    <div className="form-group">
-                                        <label htmlFor="name">Full Name *</label>
-                                        <input
-                                            type="text"
-                                            id="name"
-                                            value={reservationData.name}
-                                            onChange={(e) => setReservationData({...reservationData, name: e.target.value})}
-                                            placeholder="Your full name"
-                                            required
-                                            className="form-input"
-                                        />
-                                    </div>
-
-                                    <div className="form-group">
-                                        <label htmlFor="email">Email Address *</label>
-                                        <input
-                                            type="email"
-                                            id="email"
-                                            value={reservationData.email}
-                                            onChange={(e) => setReservationData({...reservationData, email: e.target.value})}
-                                            placeholder="your@email.com"
-                                            required
-                                            className="form-input"
-                                        />
-                                    </div>
-
-                                    <div className="form-group">
-                                        <label htmlFor="phone">Phone Number *</label>
-                                        <input
-                                            type="tel"
-                                            id="phone"
-                                            value={reservationData.phone}
-                                            onChange={(e) => setReservationData({...reservationData, phone: e.target.value})}
-                                            placeholder="+44 1234 567890"
-                                            required
-                                            className="form-input"
-                                        />
-                                    </div>
-
-                                    <div className="form-group">
-                                        <label htmlFor="guests">Number of Guests *</label>
-                                        <select
-                                            id="guests"
-                                            value={reservationData.guests}
-                                            onChange={(e) => setReservationData({...reservationData, guests: parseInt(e.target.value)})}
-                                            className="form-input"
-                                            required
+                            <div className="form-group">
+                                <label>Guests</label>
+                                <div className="guest-selector">
+                                    {[1, 2, 3, 4].map(num => (
+                                        <motion.button
+                                            key={num}
+                                            className={`guest-btn ${reservationData.guests === num ? 'active' : ''}`}
+                                            onClick={() => setReservationData({...reservationData, guests: num})}
+                                            whileHover={{ scale: 1.1 }}
+                                            whileTap={{ scale: 0.9 }}
                                         >
-                                            <option value="1">1 person</option>
-                                            <option value="2">2 people</option>
-                                            <option value="3">3 people</option>
-                                            <option value="4">4 people</option>
-                                            <option value="5">5 people</option>
-                                            <option value="6">6 people</option>
-                                            <option value="7">7 people</option>
-                                        </select>
-                                    </div>
-
-                                    <div className="form-group">
-                                        <label htmlFor="date">Date *</label>
-                                        <input
-                                            type="date"
-                                            id="date"
-                                            value={reservationData.date}
-                                            onChange={(e) => setReservationData({...reservationData, date: e.target.value})}
-                                            className="form-input"
-                                            required
-                                        />
-                                    </div>
-
-                                    <div className="form-group">
-                                        <label htmlFor="time">Time *</label>
-                                        <select
-                                            id="time"
-                                            value={reservationData.time}
-                                            onChange={(e) => setReservationData({...reservationData, time: e.target.value})}
-                                            className="form-input"
-                                            required
-                                        >
-                                            {timeSlots.map(time => (
-                                                <option key={time} value={time}>{time}</option>
-                                            ))}
-                                        </select>
-                                    </div>
+                                            {num}
+                                        </motion.button>
+                                    ))}
                                 </div>
+                            </div>
 
-                                <div className="form-group">
-                                    <label htmlFor="message">Special Requests</label>
-                                    <textarea
-                                        id="message"
-                                        value={reservationData.message}
-                                        onChange={(e) => setReservationData({...reservationData, message: e.target.value})}
-                                        placeholder="Any dietary restrictions, allergies, or special occasions..."
-                                        className="form-textarea"
-                                        rows="4"
-                                    />
-                                </div>
+                            <div className="form-group">
+                                <label>Date</label>
+                                <input
+                                    type="date"
+                                    value={reservationData.date}
+                                    onChange={(e) => setReservationData({...reservationData, date: e.target.value})}
+                                    className="date-input"
+                                />
+                            </div>
 
-                                <motion.button
-                                    type="submit"
-                                    className="submit-reservation"
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
+                            <motion.button
+                                className="submit-reservation"
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                            >
+                                <span>Request Reservation</span>
+                                <motion.div
+                                    className="reservation-arrow"
+                                    animate={{ x: [0, 5, 0] }}
+                                    transition={{ repeat: Infinity, duration: 1.5 }}
                                 >
-                                    <span>Book Reservation</span>
-                                    <motion.div
-                                        className="reservation-arrow"
-                                        animate={{ x: [0, 5, 0] }}
-                                        transition={{ repeat: Infinity, duration: 1.5 }}
-                                    >
-                                        ↗
-                                    </motion.div>
-                                </motion.button>
-
-                                <p className="form-note">
-                                    * Required fields. We'll contact you within 24 hours to confirm your reservation.
-                                </p>
-                            </form>
+                                    ↗
+                                </motion.div>
+                            </motion.button>
                         </motion.div>
 
                         <motion.div
@@ -626,52 +525,16 @@ function App() {
                             viewport={{ once: true }}
                         >
                             <div className="info-card">
-                                <div className="info-header">
-                                    <h3>Reservation Details</h3>
-                                    <div className="info-icon">📋</div>
-                                </div>
-
-                                <div className="info-content">
-                                    <div className="info-item">
-                                        <div className="info-label">Hours</div>
-                                        <div className="info-value">19:00 - 23:00</div>
-                                    </div>
-
-                                    <div className="info-item">
-                                        <div className="info-label">Capacity</div>
-                                        <div className="info-value">7 seats per session</div>
-                                    </div>
-
-                                    <div className="info-item">
-                                        <div className="info-label">Duration</div>
-                                        <div className="info-value">2-hour omakase experience</div>
-                                    </div>
-
-                                    <div className="info-item">
-                                        <div className="info-label">Cancellation</div>
-                                        <div className="info-value">24 hours notice required</div>
-                                    </div>
-
-                                    <div className="info-item">
-                                        <div className="info-label">Dress Code</div>
-                                        <div className="info-value">Smart casual</div>
-                                    </div>
-                                </div>
-
-                                <div className="contact-details">
-                                    <h4>Contact Information</h4>
-                                    <div className="contact-item">
-                                        <span className="contact-icon">📍</span>
-                                        <span>42 Sushi Lane, Clerkenwell, London EC1R 4RP</span>
-                                    </div>
-                                    <div className="contact-item">
-                                        <span className="contact-icon">Ⓣ</span>
-                                        <span>0207 123 4567</span>
-                                    </div>
-                                    <div className="contact-item">
-                                        <span className="contact-icon">📧</span>
-                                        <span>reservations@sushitetsu.co.uk</span>
-                                    </div>
+                                <h4>Counter Notes</h4>
+                                <ul>
+                                    <li>7 seats available per session</li>
+                                    <li>2-hour omakase experience</li>
+                                    <li>Chef's selection only</li>
+                                    <li>no deposit required</li>
+                                </ul>
+                                <div className="contact-info">
+                                    <p>📍 42 Sushi Lane, Clerkenwell</p>
+                                    <p>Ⓣ 0207 123 4567</p>
                                 </div>
                             </div>
                         </motion.div>
@@ -702,5 +565,5 @@ function App() {
         </div>
     );
 }
-//life sucks lmao
+
 export default App;
